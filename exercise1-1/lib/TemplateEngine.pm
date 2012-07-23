@@ -30,7 +30,7 @@ sub render{
         my $value = $$hsh_ref{$key};
 
         for my $esc_key (keys %esc_hsh){
-            $value =~ s/${esc_key}/$esc_hsh{$esc_key}/g;
+            $value =~ s/$esc_key/$esc_hsh{$esc_key}/g;
         }
 
         #$value =~ s/&/&amp;/g;
