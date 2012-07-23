@@ -5,6 +5,8 @@ use warnings;
 use utf8;
 use Encode;
 
+binmode STDOUT, ':utf8';
+
 sub new{
     my ($self, %hsh) = @_;
 
@@ -19,29 +21,18 @@ sub render{
     
     my $lines = join '', <$self>;
     
-    my %esc_hsh = (
-        '&' => '&amp;', 
-        '>' => '&gt;', 
-        '<' => '&lt;', 
-        '"' => '&quot;', 
-    );
-    
     for my $key (keys %$hsh_ref){
         my $value = $$hsh_ref{$key};
 
-        for my $esc_key (keys %esc_hsh){
-            $value =~ s/$esc_key/$esc_hsh{$esc_key}/g;
-        }
-
-        #$value =~ s/&/&amp;/g;
-        #$value =~ s/>/&gt;/g;
-        #$value =~ s/</&lt;/g;
-        #$value =~ s/"/&quot;/g;
+        $value =~ s/&/&amp;/g;
+        $value =~ s/>/&gt;/g;
+        $value =~ s/</&lt;/g;
+        $value =~ s/"/&quot;/g;
     
         $lines =~ s/{\s*%\s+$key\s+%\s*}/$value/g;
     }
     
-    return encode('utf8', $lines); 
+    return $lines; 
 }
 
 1;
