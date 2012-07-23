@@ -3,23 +3,23 @@ package TemplateEngine;
 use strict;
 use warnings;
 use utf8;
-use Encode;
 
 binmode STDOUT, ':utf8';
 
 sub new{
-    my ($self, %hsh) = @_;
+    my ($class, %hsh) = @_;
 
     open my $template, "$hsh{file}"
-        or die "ファイル開けない $!\n";
-
-    bless $template, $self;
+        or die "Could not open $hsh{file} : $!\n";
+    
+    bless {file_ref => $template}, $class;
 }
 
 sub render{
     my ($self, $hsh_ref) = @_;
-    
-    my $lines = join '', <$self>;
+   
+    my $template = ${$self}{file_ref};
+    my $lines = join '', <$template>;
     
     for my $key (keys %$hsh_ref){
         my $value = $$hsh_ref{$key};
@@ -32,7 +32,7 @@ sub render{
         $lines =~ s/{\s*%\s+$key\s+%\s*}/$value/g;
     }
     
-    return $lines; 
+    $lines;
 }
 
 1;
