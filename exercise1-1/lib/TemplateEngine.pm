@@ -31,6 +31,9 @@ sub render{
     
         $lines =~ s/{\s*%\s+$key\s+%\s*}/$value/g;
     }
+
+    #値がないときは空にする
+    $lines =~ s/{\s*%\s+\w+\s+%\s*}//g;
     
     $lines;
 }
