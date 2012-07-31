@@ -1,9 +1,16 @@
 var Template = function(input) {
-    // この関数を実装してください
+    this.source = input["source"];
 };
 
 Template.prototype = {
     render: function(variables) {
-        // この関数を実装してください
+        var result = this.source;
+        
+        for (var k in variables){
+            var re = new RegExp("{\\s*%\\s+"+k+"\\s+%\\s*}");
+            result = result.replace(re, variables[k]);
+        }
+
+        return result;
     }
 };
