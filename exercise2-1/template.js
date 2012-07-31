@@ -6,10 +6,23 @@ Template.prototype = {
     render: function(variables) {
         var result = this.source;
         
-        for (var k in variables){
-            var re = new RegExp("{\\s*%\\s+"+k+"\\s+%\\s*}");
-            result = result.replace(re, variables[k]);
+        for (var key in variables){
+            var val = variables[key];
+            
+            val = val.replace(/&/g, "&amp;");
+            val = val.replace(/>/g, "&gt;");
+            val = val.replace(/</g, "&lt;");
+            val = val.replace(/"/g, "&quot;");
+
+            key = key.replace(/\$/g, "\\$");
+
+            var re = new RegExp("{\\s*%\\s+"+key+"\\s+%\\s*}", "g");
+            result = result.replace(re, val);
         }
+
+        //値がないものは空にする
+        var re = /{\s*%\s+\w+\s+%\s*}/g;
+        result = result.replace(re, "");
 
         return result;
     }
