@@ -21,11 +21,11 @@ sub render{
     my $template = ${$self}{file_ref};
     my $lines = join '', <$template>;
 
-    #while ($lines =~ /{\s*\s+for\s+\w+\s+in\s+\w+\s+%\s*}/){
-        #$lines = makeForTree([], $lines, $hsh_ref);
+    while ($lines =~ /{\s*\s+for\s+\w+\s+in\s+\w+\s+%\s*}/){ #おかしい
+        $lines = makeForTree([], $lines, $hsh_ref);
 
-    #}
-    $lines = makeForTree([], $lines, $hsh_ref);
+    }
+    #$lines = makeForTree([], $lines, $hsh_ref);
 
     for my $key (keys %$hsh_ref){
         my $value = $$hsh_ref{$key};
@@ -44,6 +44,8 @@ sub render{
     $lines;
 }
 
+
+#ほぼバグ
 sub makeForTree{
     
     my $forarr = shift;
