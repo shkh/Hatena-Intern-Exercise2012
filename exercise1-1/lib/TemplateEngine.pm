@@ -3,37 +3,28 @@ package TemplateEngine;
 use strict;
 use warnings;
 use utf8;
+use IO::File;
+use HTML::Entities;
+
 
 binmode STDOUT, ':utf8';
 
 sub new{
-    my ($class, %hsh) = @_;
-
-    open my $template, "$hsh{file}"
-        or die "Could not open $hsh{file} : $!\n";
+    my ($class, %args) = @_;
     
-    bless {file_ref => $template}, $class;
+    my $template = new IO::File->new("$args{file}", "r");
+    
+    bless {file_ref=> $template}, $class;
 }
 
 sub render{
-    my ($self, $hsh_ref) = @_;
+    my ($self, $args) = @_;
    
     my $template = ${$self}{file_ref};
-    my $lines = join '', <$template>;
-    
-    for my $key (keys %$hsh_ref){
-        my $value = $$hsh_ref{$key};
+    my $lines = join '', $template->getlines;
 
-        $value =~ s/&/&amp;/g;
-        $value =~ s/>/&gt;/g;
-        $value =~ s/</&lt;/g;
-        $value =~ s/"/&quot;/g;
-    
-        $lines =~ s/{\s*%\s+$key\s+%\s*}/$value/g;
-    }
-
-    #値がないときは空にする
-    $lines =~ s/{\s*%\s+\w+\s+%\s*}//g;
+    my %escaped_args = map { $_ => encode_entities($$args{$_}, '<>&"') } keys %$args;
+    $lines =~ s/{\s*%\s+(\w+)\s+%\s*}/$escaped_args{$1}/g;
     
     $lines;
 }
