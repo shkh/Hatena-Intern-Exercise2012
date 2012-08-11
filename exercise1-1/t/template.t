@@ -16,6 +16,7 @@ my $expected = <<'HTML';
   </head>
   <body>
     <p>これはコンテンツです。&amp;&lt;&gt;&quot;</p>
+    <p></p>
   </body>
 </html>
 
